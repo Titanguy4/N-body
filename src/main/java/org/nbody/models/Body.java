@@ -8,8 +8,8 @@ import java.util.List;
 public class Body {
     private int id;
     private BodyType type;
-    private List<Integer[]> position;
-    private Double acceleration;
-    private Double speed;
-
+    private double mass;
+    private Vector2D position;
+    private Vector2D speed;
+    private Vector2D acceleration;
 }
