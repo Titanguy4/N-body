@@ -47,6 +47,7 @@ public class SimulationService {
                 }
             }
             Vector2D acceleration = force.multiplyByScalar(1/body.getMass());
+            body.setAcceleration(acceleration);
             body.getVelocity().add(acceleration.multiplyByScalar(deltaTime)); // change the velocity of the body
             body.getPosition().add(body.getVelocity().multiplyByScalar(deltaTime)); // change the position of the body
         }
@@ -63,11 +64,5 @@ public class SimulationService {
             e.printStackTrace();
             return "[]";
         }
-    }
-
-    // todo: to remove when link to the front
-    @Incoming("bodies-in")
-    public void consumeBodies(String bodyData) {
-        System.out.println("Message reçu: " + bodyData);
     }
 }
