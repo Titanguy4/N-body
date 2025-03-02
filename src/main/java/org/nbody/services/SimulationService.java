@@ -2,11 +2,10 @@ package org.nbody.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.quarkus.scheduler.Scheduler;
 import jakarta.enterprise.context.ApplicationScoped;
 import io.quarkus.scheduler.Scheduled;
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
-import org.eclipse.microprofile.reactive.messaging.Incoming;
+import jakarta.inject.Inject;
 import org.nbody.models.Body;
 import org.nbody.models.Vector2D;
 
@@ -16,17 +15,19 @@ import java.util.List;
 public class SimulationService {
 
     private final NBodyService nBodyService;
+    private final MQTTService mqttService;
+
+    @Inject
+    Scheduler scheduler;
 
     private static final double G = 6.67430e-11;
 
-    @Channel("bodies-out")
-    Emitter<String> bodyEmitter;
-
-    public SimulationService(NBodyService nBodyService) {
+    public SimulationService(NBodyService nBodyService, MQTTService mqttService) {
         this.nBodyService = nBodyService;
+        this.mqttService = mqttService;
     }
 
-    @Scheduled(every = "1s")
+    @Scheduled(every = "1s", identity = "simulation")
     public void updateSimulation(){
         List<Body> bodies = nBodyService.getAllBodies();
         double deltaTime = 1.0;
@@ -52,8 +53,7 @@ public class SimulationService {
             body.getPosition().add(body.getVelocity().multiplyByScalar(deltaTime)); // change the position of the body
         }
         String jsonBodies = convertBodiesToJson(bodies);
-        System.out.println("MQTT message : " + jsonBodies);
-        bodyEmitter.send(jsonBodies);
+        mqttService.sendBodies(jsonBodies);
     }
 
     private String convertBodiesToJson(List<Body> bodies) {
@@ -64,5 +64,13 @@ public class SimulationService {
             e.printStackTrace();
             return "[]";
         }
+    }
+
+    public void pauseSimulation() {
+        scheduler.pause("simulation");
+    }
+
+    public void resumeSimulation(){
+        scheduler.resume("simulation");
     }
 }

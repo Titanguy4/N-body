@@ -1,42 +1,75 @@
 package org.nbody.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.nbody.models.Body;
 import org.nbody.services.NBodyService;
+import org.nbody.services.SimulationService;
 
-import java.util.List;
+import java.io.IOException;
 
-
-@Path("/bodies")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 @ApplicationScoped
 public class NBodyController {
 
     private final NBodyService nbodyService;
+    private final SimulationService simulationService;
 
-    public NBodyController(NBodyService nbodyService){
+    private final ObjectMapper objectMapper;
+
+    public NBodyController(NBodyService nbodyService, SimulationService simulationService, ObjectMapper objectMapper){
+        this.objectMapper = objectMapper;
         this.nbodyService = nbodyService;
+        this.simulationService = simulationService;
     }
 
-    @POST
-    public Response addBody(Body body){
-        nbodyService.addBody(body);
-        return Response.ok().build();
+    @Incoming("simulation-event-add")
+    public void addBody(String bodyJson){
+        try{
+            Body body = objectMapper.readValue(bodyJson, Body.class);
+            nbodyService.addBody(body);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    @DELETE
-    @Path("/{index}")
-    public Response removeBody(@PathParam("index") int index){
-        nbodyService.deleteBody(index);
-        return Response.ok().build();
+    @Incoming("simulation-event-move")
+    public void moveBody(String bodyJson){
+        try{
+            Body body = objectMapper.readValue(bodyJson, Body.class);
+            nbodyService.changeBody(body);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
-    @GET
-    public List<Body> getBodies(){
-        return nbodyService.getAllBodies();
+    @Incoming("simulation-event-delete")
+    public void deleteBody(String bodyJson){
+        try{
+            Body body = objectMapper.readValue(bodyJson, Body.class);
+            nbodyService.deleteBody(body.getId());
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
+
+    @Incoming("simulation-event-pause")
+    public void pauseSimulation(String message){
+        if(message.equals("pause")){
+            simulationService.pauseSimulation();
+        } else if (message.equals("resume")){
+            simulationService.resumeSimulation();
+        }
+    }
+
+    @Incoming("simulation-preset")
+    public void presetSimulation(String message){
+        switch (message) {
+            case "two-bodies" -> nbodyService.setTwoBodies();
+            case "three-bodies" -> nbodyService.setThreeBodies();
+            default -> nbodyService.setSystemSolar();
+        }
+    }
+
+
 }

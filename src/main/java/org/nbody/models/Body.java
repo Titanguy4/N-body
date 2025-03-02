@@ -1,5 +1,6 @@
 package org.nbody.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +15,6 @@ public class Body {
     private BodyType type;
     private double mass;
     private Vector2D position;
-    private Vector2D velocity;
-    private Vector2D acceleration;
+    @JsonIgnore private Vector2D velocity;
+    @JsonIgnore private Vector2D acceleration;
 }

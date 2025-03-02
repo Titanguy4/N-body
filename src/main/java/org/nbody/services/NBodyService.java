@@ -1,9 +1,6 @@
 package org.nbody.services;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.nbody.models.Body;
 import org.nbody.models.BodyType;
 import org.nbody.models.Vector2D;
@@ -16,11 +13,51 @@ public class NBodyService {
 
     private final List<Body> bodies = new ArrayList<>();
 
-    @Channel("bodies")
-    Emitter<String> bodyEmitter;
+    private final MQTTService mqttService;
 
-    @PostConstruct
-    public void initSolarSystem() {
+    public NBodyService(MQTTService mqttService){
+        this.mqttService = mqttService;
+    }
+
+    public void addBody(Body body){
+        body.setVelocity(new Vector2D(10, 10));
+        body.setAcceleration(new Vector2D(0, 0));
+        bodies.add(body);
+        this.publishBodies();
+    }
+
+    public List<Body> getAllBodies(){
+        return bodies;
+    }
+
+    public void deleteBody(int index){
+        if(index >= 0 && index < bodies.size()){
+            bodies.remove(index);
+            this.publishBodies();
+        }
+    }
+
+    public void changeBody(Body updatedBody) {
+        for(Body body : this.bodies){
+            if(body.getId() == updatedBody.getId()){
+                body.setType(updatedBody.getType());
+                body.setMass(updatedBody.getMass());
+                body.setPosition(updatedBody.getPosition());
+            }
+        }
+    }
+
+    public void deleteAllBodies(){
+        this.bodies.clear();
+    }
+
+    private void publishBodies() {
+        String jsonBodies = bodies.toString();
+        mqttService.sendBodies(jsonBodies);
+    }
+
+    public void setSystemSolar() {
+        this.deleteAllBodies();
         bodies.add(new Body(1, new BodyType("PLANET"), 1.989e30, new Vector2D(0, 0), new Vector2D(0, 0), new Vector2D(0, 0)));
         bodies.add(new Body(2, new BodyType("PLANET"), 3.285e23, new Vector2D(57.9e9, 0), new Vector2D(0, 47400), new Vector2D(0, 0)));
         bodies.add(new Body(3, new BodyType("PLANET"), 4.867e24, new Vector2D(108.2e9, 0), new Vector2D(0, 35020), new Vector2D(0, 0)));
@@ -32,25 +69,16 @@ public class NBodyService {
         bodies.add(new Body(9, new BodyType("PLANET"), 1.024e26, new Vector2D(4495.1e9, 0), new Vector2D(0, 5430), new Vector2D(0, 0)));
     }
 
-    public List<Body> getAllBodies(){
-        return bodies;
+    public void setTwoBodies(){
+        this.deleteAllBodies();
+        bodies.add(new Body(1, new BodyType("PLANET"), 5.972e24, new Vector2D(0, 0), new Vector2D(0, 0), new Vector2D(0, 0)));
+        bodies.add(new Body(2, new BodyType("PLANET"), 7.348e22, new Vector2D(384.4e6, 0), new Vector2D(0, 1022), new Vector2D(0, 0)));
     }
 
-    public void addBody(Body body){
-        bodies.add(body);
-        this.publishBodies();
-    }
-
-    public void deleteBody(int index){
-        if(index >= 0 && index < bodies.size()){
-            bodies.remove(index);
-            this.publishBodies();
-        }
-    }
-
-    // TODO: à voir si cela foncitonne
-    private void publishBodies() {
-        String jsonBodies = bodies.toString();
-        bodyEmitter.send(jsonBodies);
+    public void setThreeBodies(){
+        this.deleteAllBodies();
+        bodies.add(new Body(1, new BodyType("PLANET"), 5.972e24, new Vector2D(0, 0), new Vector2D(0, 0), new Vector2D(0, 0)));
+        bodies.add(new Body(2, new BodyType("PLANET"), 7.348e22, new Vector2D(384.4e6, 0), new Vector2D(0, 1022), new Vector2D(0, 0)));
+        bodies.add(new Body(3, new BodyType("PLANET"), 1.989e30, new Vector2D(1.496e11, 0), new Vector2D(0, 29783), new Vector2D(0, 0)));
     }
 }
