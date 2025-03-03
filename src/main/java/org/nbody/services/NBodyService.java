@@ -81,8 +81,6 @@ public class NBodyService {
         this.deleteAllBodies();
         bodies.add(new Body(1, new BodyType("PLANET"), 100.0, new Vector2D(0, 0), new Vector2D(10, 0), new Vector2D(0, 0)));
         bodies.add(new Body(2, new BodyType("PLANET"), 50.0, new Vector2D(0, 0), new Vector2D(10, 0), new Vector2D(0, 0)));
-        //bodies.add(new Body(1, new BodyType("PLANET"), 200000000, new Vector2D(0, 0), new Vector2D(0, 0), new Vector2D(0, 0)));
-        //bodies.add(new Body(2, new BodyType("PLANET"), 200000000, new Vector2D(1, 0), new Vector2D(0, 0), new Vector2D(0, 0)));
     }
 
     public void setThreeBodies(){
