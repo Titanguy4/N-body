@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.nbody.SimulationServiceTest" tests="2" skipped="2" failures="0" errors="0" timestamp="2025-03-03T13:42:30" hostname="puyfages-HP-Pavilion-Plus-Laptop-14-eh0xxx" time="0.001">
+  <properties/>
+  <testcase name="updateSimulationWithDifferentBodies()" classname="org.nbody.SimulationServiceTest" time="0.001">
+    <skipped/>
+  </testcase>
+  <testcase name="updateSimulationBodiesSamePosition()" classname="org.nbody.SimulationServiceTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

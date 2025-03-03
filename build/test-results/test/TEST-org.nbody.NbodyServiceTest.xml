@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.nbody.NbodyServiceTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2025-03-03T13:42:30" hostname="puyfages-HP-Pavilion-Plus-Laptop-14-eh0xxx" time="0.043">
+  <properties/>
+  <testcase name="deleteBodyWithOutOfRange()" classname="org.nbody.NbodyServiceTest" time="0.033"/>
+  <testcase name="addBody()" classname="org.nbody.NbodyServiceTest" time="0.001"/>
+  <testcase name="deleteAllBodies()" classname="org.nbody.NbodyServiceTest" time="0.001"/>
+  <testcase name="addNullBody()" classname="org.nbody.NbodyServiceTest" time="0.002"/>
+  <testcase name="deleteBodyWithNegativeIndex()" classname="org.nbody.NbodyServiceTest" time="0.001"/>
+  <testcase name="deleteBody()" classname="org.nbody.NbodyServiceTest" time="0.001"/>
+  <system-out><![CDATA[2025-03-03 14:42:30,201 INFO  [org.nbo.ser.NBodyService] (Test worker) Delete Body
+2025-03-03 14:42:30,227 INFO  [org.nbo.ser.NBodyService] (Test worker) Delete Body
+2025-03-03 14:42:30,229 INFO  [org.nbo.ser.NBodyService] (Test worker) Delete Body
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
