@@ -24,9 +24,8 @@ public class NBodyService {
     public void addBody(Body body){
         body.setVelocity(new Vector2D(0, 0));
         body.setAcceleration(new Vector2D(0, 0));
-        body.setId(bodies.size() + 100);
+        body.setId(bodies.size());
         bodies.add(body);
-        this.publishBodies();
     }
 
     public List<Body> getAllBodies(){
@@ -35,9 +34,8 @@ public class NBodyService {
 
     public void deleteBody(int index){
         log.info("Delete Body");
-        if(index >= 0 && index < bodies.size()){
-            bodies.remove(index);
-            this.publishBodies();
+        if(index >= 0 && index <= bodies.size()){
+            bodies.remove(index - 1);
         }
         log.debug(bodies.toString());
     }
