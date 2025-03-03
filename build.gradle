@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'io.quarkus'
+    id("jacoco")
 }
 
 repositories {
@@ -8,7 +9,40 @@ repositories {
     mavenLocal()
 }
 
+tasks.jacocoTestCoverageVerification {
+
+    violationRules {
+        rule {
+            element = "CLASS"
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = "0.40".toBigDecimal()
+            }
+            limit {
+                counter = "BRANCH"
+                value = "COVEREDRATIO"
+                minimum = "0.45".toBigDecimal()
+            }
+        }
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(sourceSets.main.output.classesDirs).collect {
+            fileTree(dir: it, exclude: [
+                    "org/nbody/controllers/**",
+                    "org/nbody/services/MQTTService.class"
+            ])
+        })
+    }
+}
+
+tasks.check {
+    dependsOn(tasks.jacocoTestCoverageVerification)
+}
+
 dependencies {
+    implementation 'io.quarkus:quarkus-jacoco'
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-arc'
     implementation 'io.quarkus:quarkus-rest'
@@ -20,6 +54,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
+    testImplementation 'org.mockito:mockito-core:5.14.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.14.2'
 }
 
 group 'org.nbody'

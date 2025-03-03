@@ -15,6 +15,6 @@ public class Body {
     private BodyType type;
     private double mass;
     private Vector2D position;
-    @JsonIgnore private Vector2D velocity;
-    @JsonIgnore private Vector2D acceleration;
+    private Vector2D velocity;
+    private Vector2D acceleration;
 }

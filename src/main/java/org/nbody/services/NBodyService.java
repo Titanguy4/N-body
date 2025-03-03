@@ -22,6 +22,9 @@ public class NBodyService {
     }
 
     public void addBody(Body body){
+        if(body == null){
+            throw new IllegalArgumentException("Body cannot be null");
+        }
         body.setVelocity(new Vector2D(0, 0));
         body.setAcceleration(new Vector2D(0, 0));
         body.setId(bodies.size());
@@ -74,8 +77,8 @@ public class NBodyService {
 
     public void setTwoBodies(){
         this.deleteAllBodies();
-        bodies.add(new Body(1, new BodyType("PLANET"), 200000000, new Vector2D(0, 0), new Vector2D(0, 0), new Vector2D(0, 0)));
-        bodies.add(new Body(2, new BodyType("PLANET"), 200000000, new Vector2D(1, 0), new Vector2D(0, 0), new Vector2D(0, 0)));
+        bodies.add(new Body(1, new BodyType("PLANET"), 100.0, new Vector2D(0, 0), new Vector2D(10, 0), new Vector2D(0, 0)));
+        bodies.add(new Body(2, new BodyType("PLANET"), 50.0, new Vector2D(0, 0), new Vector2D(10, 0), new Vector2D(0, 0)));
     }
 
     public void setThreeBodies(){
