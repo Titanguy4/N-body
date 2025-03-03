@@ -2,14 +2,16 @@ package org.nbody.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.quarkus.scheduler.Scheduled;
 import io.quarkus.scheduler.Scheduler;
 import jakarta.enterprise.context.ApplicationScoped;
-import io.quarkus.scheduler.Scheduled;
 import jakarta.inject.Inject;
 import org.nbody.models.Body;
 import org.nbody.models.Vector2D;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 @ApplicationScoped
 public class SimulationService {
@@ -29,7 +31,7 @@ public class SimulationService {
         this.mqttService = mqttService;
     }
 
-    @Scheduled(every = "1s", identity = "simulation")
+    @Scheduled(identity = "simulation", every = "1s")
     public void updateSimulation(){
         List<Body> bodies = nBodyService.getAllBodies();
         double deltaTime = 1.0;
@@ -58,7 +60,7 @@ public class SimulationService {
         mqttService.sendBodies(jsonBodies);
     }
 
-    private String convertBodiesToJson(List<Body> bodies) {
+    String convertBodiesToJson(List<Body> bodies) {
         try{
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.writeValueAsString(bodies);
