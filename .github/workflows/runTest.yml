@@ -22,6 +22,14 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
+      - name: Install SDKMAN!
+        run: curl -s "https://get.sdkman.io" | bash
+
+      - name: Install Gradle
+        run: |
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk install gradle 7.3.3
+
       - name: Cache Gradle packages
         uses: actions/cache@v2
         with:
@@ -29,8 +37,5 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
       - name: Build and Test
-        run: ./gradlew test
+        run: gradle test
