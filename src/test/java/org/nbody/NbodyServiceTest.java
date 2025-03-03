@@ -1,6 +1,7 @@
 package org.nbody;
 
 import io.quarkus.test.Mock;
+import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.nbody.models.Body;

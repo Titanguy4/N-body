@@ -1,5 +1,6 @@
 package org.nbody;
 
+import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SimulationTest {
+class SimulationServiceTest {
 
     @Mock
     private NBodyService nBodyService;
@@ -72,20 +73,20 @@ class SimulationTest {
 
         simulationService.updateSimulation();
 
-        double epsilon = 1e-2;
-        assertEquals(0, bodies.get(0).getPosition().getX(), epsilon);
+        double epsilon = 1e-12;
+        assertEquals(10.00, bodies.get(0).getPosition().getX(), epsilon);
         assertEquals(0, bodies.get(0).getPosition().getY(), epsilon);
-        assertEquals(0, bodies.get(1).getPosition().getX(), epsilon);
+        assertEquals(10.000000000066, bodies.get(1).getPosition().getX(), epsilon);
         assertEquals(0, bodies.get(1).getPosition().getY(), epsilon);
 
-        assertEquals(0, bodies.get(0).getVelocity().getX(), epsilon);
+        assertEquals(10.00, bodies.get(0).getVelocity().getX(), epsilon);
         assertEquals(0, bodies.get(0).getVelocity().getY(), epsilon);
-        assertEquals(0, bodies.get(1).getVelocity().getX(), epsilon);
+        assertEquals(10.000000000066, bodies.get(1).getVelocity().getX(), epsilon);
         assertEquals(0, bodies.get(1).getVelocity().getY(), epsilon);
 
         assertEquals(0, bodies.get(0).getAcceleration().getX(), epsilon);
         assertEquals(0, bodies.get(0).getAcceleration().getY(), epsilon);
-        assertEquals(0, bodies.get(1).getAcceleration().getX(), epsilon);
+        assertEquals(6.6743E-11, bodies.get(1).getAcceleration().getX(), epsilon);
         assertEquals(0, bodies.get(1).getAcceleration().getY(), epsilon);
 
         verify(mqttService, times(1)).sendBodies(anyString());

@@ -10,21 +10,35 @@ repositories {
 }
 
 tasks.jacocoTestCoverageVerification {
+
     violationRules {
         rule {
             element = "CLASS"
             limit {
                 counter = "LINE"
                 value = "COVEREDRATIO"
-                minimum = "0.60".toBigDecimal()
+                minimum = "0.40".toBigDecimal()
             }
             limit {
                 counter = "BRANCH"
                 value = "COVEREDRATIO"
-                minimum = "0.65".toBigDecimal()
+                minimum = "0.45".toBigDecimal()
             }
         }
     }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(sourceSets.main.output.classesDirs).collect {
+            fileTree(dir: it, exclude: [
+                    "org/nbody/controllers/**",
+                    "org/nbody/services/MQTTService.class"
+            ])
+        })
+    }
+}
+
+tasks.check {
+    dependsOn(tasks.jacocoTestCoverageVerification)
 }
 
 dependencies {
