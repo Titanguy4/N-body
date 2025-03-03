@@ -21,12 +21,16 @@ public class NBodyService {
         this.mqttService = mqttService;
     }
 
+
     public void addBody(Body body){
-        body.setVelocity(new Vector2D(0, 0));
-        body.setAcceleration(new Vector2D(0, 0));
-        body.setId(bodies.size() + 100);
-        bodies.add(body);
-        this.publishBodies();
+        try {
+            body.setVelocity(new Vector2D(0, 0));
+            body.setAcceleration(new Vector2D(0, 0));
+            body.setId(bodies.size() + 100);
+            bodies.add(body);
+        } catch (Exception e) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public List<Body> getAllBodies(){
@@ -34,12 +38,9 @@ public class NBodyService {
     }
 
     public void deleteBody(int index){
-        log.info("Delete Body");
         if(index >= 0 && index < bodies.size()){
             bodies.remove(index);
-            this.publishBodies();
         }
-        log.debug(bodies.toString());
     }
 
     public void changeBody(Body updatedBody) {
