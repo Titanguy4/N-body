@@ -1,6 +1,7 @@
 package org.nbody.services;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import lombok.extern.slf4j.Slf4j;
 import org.nbody.models.Body;
 import org.nbody.models.BodyType;
 import org.nbody.models.Vector2D;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
+@Slf4j
 public class NBodyService {
 
     private final List<Body> bodies = new ArrayList<>();
@@ -20,8 +22,9 @@ public class NBodyService {
     }
 
     public void addBody(Body body){
-        body.setVelocity(new Vector2D(10, 10));
+        body.setVelocity(new Vector2D(0, 0));
         body.setAcceleration(new Vector2D(0, 0));
+        body.setId(bodies.size() + 100);
         bodies.add(body);
         this.publishBodies();
     }
@@ -31,10 +34,12 @@ public class NBodyService {
     }
 
     public void deleteBody(int index){
+        log.info("Delete Body");
         if(index >= 0 && index < bodies.size()){
             bodies.remove(index);
             this.publishBodies();
         }
+        log.debug(bodies.toString());
     }
 
     public void changeBody(Body updatedBody) {
@@ -71,14 +76,14 @@ public class NBodyService {
 
     public void setTwoBodies(){
         this.deleteAllBodies();
-        bodies.add(new Body(1, new BodyType("PLANET"), 5.972e24, new Vector2D(0, 0), new Vector2D(0, 0), new Vector2D(0, 0)));
-        bodies.add(new Body(2, new BodyType("PLANET"), 7.348e22, new Vector2D(384.4e6, 0), new Vector2D(0, 1022), new Vector2D(0, 0)));
+        bodies.add(new Body(1, new BodyType("PLANET"), 200000000, new Vector2D(0, 0), new Vector2D(0, 0), new Vector2D(0, 0)));
+        bodies.add(new Body(2, new BodyType("PLANET"), 200000000, new Vector2D(1, 0), new Vector2D(0, 0), new Vector2D(0, 0)));
     }
 
     public void setThreeBodies(){
         this.deleteAllBodies();
-        bodies.add(new Body(1, new BodyType("PLANET"), 5.972e24, new Vector2D(0, 0), new Vector2D(0, 0), new Vector2D(0, 0)));
-        bodies.add(new Body(2, new BodyType("PLANET"), 7.348e22, new Vector2D(384.4e6, 0), new Vector2D(0, 1022), new Vector2D(0, 0)));
-        bodies.add(new Body(3, new BodyType("PLANET"), 1.989e30, new Vector2D(1.496e11, 0), new Vector2D(0, 29783), new Vector2D(0, 0)));
+        bodies.add(new Body(1, new BodyType("PLANET"), 200000000, new Vector2D(0, 0), new Vector2D(0, 0), new Vector2D(0, 0)));
+        bodies.add(new Body(2, new BodyType("PLANET"), 200000000, new Vector2D(2, 0), new Vector2D(0, 0), new Vector2D(0, 0)));
+        bodies.add(new Body(3, new BodyType("PLANET"), 200000000, new Vector2D(-2, 2), new Vector2D(0, 0), new Vector2D(0, 0)));
     }
 }

@@ -22,6 +22,8 @@ public class SimulationService {
 
     private static final double G = 6.67430e-11;
 
+
+
     public SimulationService(NBodyService nBodyService, MQTTService mqttService) {
         this.nBodyService = nBodyService;
         this.mqttService = mqttService;
