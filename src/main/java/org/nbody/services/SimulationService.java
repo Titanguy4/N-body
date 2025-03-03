@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import org.nbody.models.Body;
 import org.nbody.models.Vector2D;
 
@@ -14,6 +15,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @ApplicationScoped
+@Slf4j
 public class SimulationService {
 
     private final NBodyService nBodyService;
@@ -21,7 +23,7 @@ public class SimulationService {
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     private static final double G = 6.67430e-11;
-    private static final long UPDATE_INTERVAL_MS = 17;
+    private static final long UPDATE_INTERVAL_MS = 100;
 
     private boolean running = true;
 
@@ -84,5 +86,6 @@ public class SimulationService {
 
     public void resumeSimulation() {
         running = true;
+        log.info("Simulation restarted");
     }
 }
